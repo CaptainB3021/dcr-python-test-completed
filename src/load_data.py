@@ -1,20 +1,18 @@
 import json
-
+import requests  # Import the requests library for fetching
 from db import Country, Region
 
-
 class LoadData:
-    DATA_FILE = "../data/countries.json"
+    DATA_URL = "https://storage.googleapis.com/dcr-django-test/countries.json"  # Provided URL
 
     def __init__(self):
-        # Cache of regions
         self.regions = {}
 
     def get_raw_data(self):
-        data = None
-        with open(self.DATA_FILE) as f:
-            data = json.load(f)
-        return data
+        # Use requests to fetch the data from the URL
+        response = requests.get(self.DATA_URL)
+        response.raise_for_status()
+        return response.json()
 
     def add_country(self, data):
         region_name = data.get("region", "Unknown")
@@ -29,6 +27,8 @@ class LoadData:
             data["alpha2Code"],
             data["alpha3Code"],
             data["population"],
+            data["topLevelDomain"][0],
+            data["capital"],
             region_id,
         )
         print(country.data)
@@ -44,7 +44,6 @@ class LoadData:
         data = self.get_raw_data()
         for row in data:
             self.add_country(row)
-
 
 if __name__ == "__main__":
     LoadData().run()

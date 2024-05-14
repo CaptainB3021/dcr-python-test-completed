@@ -15,6 +15,8 @@ class CreateDB(DBO):
             alpha2Code TEXT,
             alpha3Code TEXT,
             population INTEGER,
+            topLevelDomain TEXT,
+            capital TEXT,
             region_id INTEGER,
             FOREIGN KEY (region_id) REFERENCES region(id)
         );"""
